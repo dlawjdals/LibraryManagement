@@ -4,7 +4,7 @@ import java.util.*;
  * 도서 관리 시스템의 메인 클래스
  * <p>사용자 인터페이스(CLI)를 제공하며, DB 연결하여 권한에 따른 메뉴 출력 및 사용자 입력을 처리합니다.</p>
  * <p>2026년 5월 18일 시작</p>
- *
+ * <p>2026.05.20 수요일 수업 이후 pull request 연습</p>
  * @author 임정민
  * @version 1.2
  */
@@ -49,9 +49,9 @@ public class LibraryMain {
     private static boolean performLogin() {
         while (true) {
             System.out.println("\n========= CSV 로그인 시스템 =========");
-            System.out.print("아이디: ");
+            System.out.print("아이디 입력해주세요: ");
             String id = sc.nextLine();
-            System.out.print("비밀번호: ");
+            System.out.print("비밀번호 입력해주세요: ");
             String pw = sc.nextLine();
 
             if (manager.login(id, pw)) return true;
