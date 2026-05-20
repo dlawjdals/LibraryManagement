@@ -49,9 +49,9 @@ public class LibraryMain {
     private static boolean performLogin() {
         while (true) {
             System.out.println("\n========= CSV 로그인 시스템 =========");
-            System.out.print("아이디: ");
+            System.out.print("아이디 입력해주세요: ");
             String id = sc.nextLine();
-            System.out.print("비밀번호: ");
+            System.out.print("비밀번호 입력해주세요: ");
             String pw = sc.nextLine();
 
             if (manager.login(id, pw)) return true;
