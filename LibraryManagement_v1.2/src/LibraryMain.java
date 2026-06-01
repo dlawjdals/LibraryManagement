@@ -51,6 +51,12 @@ public class LibraryMain {
             System.out.println("\n========= CSV 로그인 시스템 =========");
             System.out.print("아이디 입력해주세요: ");
             String id = sc.nextLine();
+            if (id.matches("\\d+"))
+            {
+                System.out.println("[오류] 아이디는 첫 글자는 숫자로 입력할 수 없습니다. 다시 입력하세요.");
+                continue;
+            }
+
             System.out.print("비밀번호 입력해주세요: ");
             String pw = sc.nextLine();
 
