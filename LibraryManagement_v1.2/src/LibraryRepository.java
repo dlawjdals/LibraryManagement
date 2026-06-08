@@ -4,9 +4,9 @@ import java.util.List;
 
 public class LibraryRepository {
     // DB 연결 정보
-    private final String URL = "jdbc:mariadb://192.168.100.20:3306/library";
-    private final String USER = "cjulib";
-    private final String PASSWORD = "security";
+//    private final String URL = "jdbc:mariadb://192.168.100.20:3306/library";
+//    private final String USER = "cjulib";
+//    private final String PASSWORD = "security";
 
     /**
      * MariaDB 연결을 위한 전용 메소드입니다.
@@ -16,14 +16,42 @@ public class LibraryRepository {
      *
      * @see <a href="https://mariadb.com/kb/en/about-mariadb-connector-j/">MariaDB Connector/J Documentation</a>
      */
+//    private Connection getConnection() throws SQLException {
+//        try {
+//            Class.forName("org.mariadb.jdbc.Driver"); //
+//        } catch (ClassNotFoundException e) {
+//            throw new SQLException("드라이버 로드 실패: " + e.getMessage());
+//        }
+//        return DriverManager.getConnection(URL, USER, PASSWORD);
+//    }
+
+    // [보안 개선] 하드코딩된 URL/USER/PASSWORD 상수 제거
+    //            → 접속 정보는 DBConfig를 통해 db.properties에서 읽어옴
+
+    /**
+     * MariaDB 연결을 위한 전용 메소드입니다.
+     * <p>접속 정보는 소스 코드에 직접 두지 않고 DBConfig(외부 설정)에서 가져와
+     *    자격증명 노출 및 중복 관리 문제를 방지합니다.</p>
+     * @return 데이터베이스 연결 객체
+     * @throws SQLException 드라이버 로드 실패 또는 연결 실패 시 발생
+     */
     private Connection getConnection() throws SQLException {
         try {
-            Class.forName("org.mariadb.jdbc.Driver"); //
+            // 드라이버 로드
+            Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            throw new SQLException("드라이버 로드 실패: " + e.getMessage());
+            // [보안] 상세 메시지 대신 일반화된 메시지 사용
+            throw new SQLException("드라이버 로드 실패");
         }
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+
+        // DBConfig에서 접속 정보를 받아 연결 (하드코딩 제거)
+        return DriverManager.getConnection(
+                DBConfig.getUrl(),
+                DBConfig.getUser(),
+                DBConfig.getPassword());
     }
+
+
 
     /**
      * 메모리의 모든 도서 정보를 MariaDB에 동기화(저장)합니다.

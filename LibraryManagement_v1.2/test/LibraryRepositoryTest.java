@@ -27,7 +27,7 @@ class LibraryRepositoryTest {
         // Repository 내부의 연결 설정을 활용하거나 직접 연결하여 초기화 수행
         // 여기서는 테스트 편의를 위해 직접 연결 예시를 포함합니다.
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mariadb://192.168.100.20:3306/library", "cjulib", "security");
+                DBConfig.getUrl(), DBConfig.getUser(), DBConfig.getPassword());
              Statement stmt = conn.createStatement()) {
 
             stmt.executeUpdate(deleteBooks);
@@ -164,7 +164,7 @@ class LibraryRepositoryTest {
 
         // 기존 clearTables()에 정의된 마리아DB 연결 정보를 그대로 활용하여 직접 조회 수행
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mariadb://192.168.100.20:3306/library", "cjulib", "security");
+                DBConfig.getUrl(), DBConfig.getUser(), DBConfig.getPassword());
              PreparedStatement pstmt = conn.prepareStatement(verifySql)) {
 
             pstmt.setInt(1, targetBookId);
