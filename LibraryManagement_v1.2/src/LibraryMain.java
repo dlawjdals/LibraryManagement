@@ -1,5 +1,8 @@
 import java.util.*;
 
+
+// java -cp ".;C:\LJM\Desktop\APPSEC\LibraryManagement\LibraryManagement_v1.2\lib\mariadb-java-client-3.5.7.jar" LibraryMain
+// 교수님 어플리케이션보안 수업 비밀번호 **** 뜨게하는 커멘드 로컬 주소 교수님이랑 달라서 따로 따옴
 /**
  * 도서 관리 시스템의 메인 클래스
  * <p>사용자 인터페이스(CLI)를 제공하며, DB 연결하여 권한에 따른 메뉴 출력 및 사용자 입력을 처리합니다.</p>
@@ -51,11 +54,11 @@ public class LibraryMain {
             System.out.println("\n========= CSV 로그인 시스템 =========");
             System.out.print("아이디 입력해주세요: ");
             String id = sc.nextLine();
-            if (id.matches("\\d+"))
-            {
-                System.out.println("[오류] 아이디는 첫 글자는 숫자로 입력할 수 없습니다. 다시 입력하세요.");
-                continue;
-            }
+//            if (id.matches("\\d+"))
+//            {
+//                System.out.println("[오류] 아이디는 첫 글자는 숫자로 입력할 수 없습니다. 다시 입력하세요.");
+//                continue;
+//            }
 
             System.out.print("비밀번호 입력해주세요: ");
             String pw = sc.nextLine();
