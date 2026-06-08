@@ -84,7 +84,7 @@ class LibraryRepositoryTest {
 
     @Test
     @DisplayName("DB로부터 사용자 데이터 로드 테스트 (loadUsers)")
-    void loadUsers() {
+    void loadUser() {
         // When: 로드 실행 (이제 단일 User 객체를 반환함)
         User user = repository.loadUser("admin", "1111");
 
@@ -97,6 +97,45 @@ class LibraryRepositoryTest {
 
         // 3. 권한(Type)도 맞는지 확인해보면 좋습니다.
         assertEquals("ADMIN", user.getRole(), "사용자 권한이 'ADMIN'이어야 합니다.");
+    }
+
+    @Test
+    @DisplayName("SQL Injection 입력으로 인증이 우회되지 않아야 한다")
+    void loadUser_sqlInjection_shouldNotBypassAuth() {
+        // Given: 고전적인 인증 우회 페이로드
+        String maliciousId = "' OR '1'='1' -- ";
+        String anyPw = "anything";
+
+        // When
+        User user = repository.loadUser(maliciousId, anyPw);
+
+        // Then: 수정 전이라면 첫 사용자가 반환되어 우회 성공, 수정 후라면 null
+        assertNull(user, "SQL Injection 입력은 인증을 우회해서는 안 됩니다.");
+    }
+
+    @Test
+    @DisplayName("주석(--) 주입으로 비밀번호 검사가 무력화되지 않아야 한다")
+    void loadUser_commentInjection_shouldNotIgnorePassword() {
+        // Given: 실제 존재하는 admin 계정에 주석을 붙여 비밀번호 검사를 건너뛰려는 시도
+        String injectedId = "admin' -- ";
+        String wrongPw = "wrong_password";
+
+        // When
+        User user = repository.loadUser(injectedId, wrongPw);
+
+        // Then: 비밀번호가 틀렸으므로 주입과 무관하게 null이어야 함
+        assertNull(user, "주석 주입으로 비밀번호 검사를 건너뛸 수 없어야 합니다.");
+    }
+
+    @Test
+    @DisplayName("잘못된 비밀번호로는 로그인에 실패해야 한다")
+    void loadUser_wrongPassword_shouldFail() {
+        // Given: 올바른 ID, 틀린 비밀번호
+        // When
+        User user = repository.loadUser("admin", "wrong_password");
+
+        // Then
+        assertNull(user, "비밀번호가 틀리면 로그인에 실패해야 합니다.");
     }
 
     @Test
